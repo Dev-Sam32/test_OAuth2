@@ -6,7 +6,9 @@ import com.example.test_OAuth2.security.handler.MemberAuthenticationEntryPoint;
 import com.example.test_OAuth2.security.handler.OAuth2MemberSuccessHandler;
 import com.example.test_OAuth2.security.jwt.JwtTokenizer;
 import com.example.test_OAuth2.security.jwt.filter.JwtVerificationFilter;
+import com.example.test_OAuth2.security.service.OAuth2MemberService;
 import com.example.test_OAuth2.security.utils.CustomAuthorityUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,16 +27,13 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity(debug = true)
+@RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
     private final MemberService memberService;
 
-    public SecurityConfig(JwtTokenizer jwtTokenizer, CustomAuthorityUtils authorityUtils, MemberService memberService) {
-        this.jwtTokenizer = jwtTokenizer;
-        this.authorityUtils = authorityUtils;
-        this.memberService = memberService;
-    }
+    private final OAuth2MemberService oAuth2MemberService;
 
     //    @Value("${spring.security.oauth2.client.registration.google.clientId}")
 //    private String google_clientId;
@@ -47,7 +46,6 @@ public class SecurityConfig {
 //
 //    @Value("${spring.security.oauth2.client.registration.github.clientSecret}")
 //    private String github_clientSecret;
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -81,7 +79,7 @@ public class SecurityConfig {
                         .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2
-                        .successHandler(new OAuth2MemberSuccessHandler(jwtTokenizer, authorityUtils, memberService))
+                        .successHandler(new OAuth2MemberSuccessHandler(jwtTokenizer, authorityUtils, oAuth2MemberService))
                 );
 
 //        http

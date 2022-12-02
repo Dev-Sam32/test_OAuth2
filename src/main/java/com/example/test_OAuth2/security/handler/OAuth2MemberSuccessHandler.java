@@ -1,9 +1,10 @@
 package com.example.test_OAuth2.security.handler;
 
 import com.example.test_OAuth2.member.entity.Member;
-import com.example.test_OAuth2.member.service.MemberService;
 import com.example.test_OAuth2.security.jwt.JwtTokenizer;
+import com.example.test_OAuth2.security.service.OAuth2MemberService;
 import com.example.test_OAuth2.security.utils.CustomAuthorityUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -20,17 +21,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@RequiredArgsConstructor
 public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {   // = extends AbstractAuthenticationTargetUrlRequestHandler implements AuthenticationSuccessHandler
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
-    private final MemberService memberService;
-
-    public OAuth2MemberSuccessHandler(JwtTokenizer jwtTokenizer, CustomAuthorityUtils authorityUtils, MemberService memberService) {
-        this.jwtTokenizer = jwtTokenizer;
-        this.authorityUtils = authorityUtils;
-        this.memberService = memberService;
-    }
+    private final OAuth2MemberService oAuth2MemberService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -46,7 +41,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
     private void saveMember(String email) {
         Member member = new Member(email);
-        memberService.createMember(member);
+        oAuth2MemberService.createMember(member);
     }
 
     private void redirect(HttpServletRequest request, HttpServletResponse response, String username, List<String> authorities) throws IOException {
