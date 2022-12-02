@@ -60,6 +60,9 @@ public class Member extends Auditable {
 //            review.setMember(this);
 //        }
 //    }
+    public Member(String email) {
+        this.email = email;
+    }
 
     public Member(String name, String email, String password) {
         this.name = name;

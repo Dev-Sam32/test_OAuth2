@@ -4,8 +4,19 @@ spring:
       client:
         registration:
           google:
-            clientId: '481746259666-7liqlsdja6ofr17u38ek56p8lu454rqe.apps.googleusercontent.com'
-            clientSecret: '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'
+#            clientId: $OAUTH2_GOOGLE_CLIENT_ID
+#            clientSecret: $OAUTH2_GOOGLE_CLIENT_SECRET
+            clientId: 481746259666-7liqlsdja6ofr17u38ek56p8lu454rqe.apps.googleusercontent.com
+            clientSecret: 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
             scope:
               - email
               - profile
+
+          github:
+#            clientId: $GITHUB_CLIENT_ID
+#            clientSecret: $GITHUB_CLIENT_SECRET
+            clientId: 4a64843fc07c3f048c00
+            clientSecret: c232f5c72d0fea311139e616b34ca560a22f5a0b
+            scope:
+            - email
+            - profile

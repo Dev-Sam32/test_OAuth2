@@ -2,12 +2,9 @@ package com.example.test_OAuth2.member.service;
 
 import com.example.test_OAuth2.exception.BusinessLogicException;
 import com.example.test_OAuth2.exception.ExceptionCode;
-import com.example.test_OAuth2.helper.event.MemberRegistrationApplicationEvent;
 import com.example.test_OAuth2.member.entity.Member;
 import com.example.test_OAuth2.member.repository.MemberRepository;
 import com.example.test_OAuth2.security.utils.CustomAuthorityUtils;
-import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -22,12 +19,17 @@ import java.util.List;
 import java.util.Optional;
 
 @Service @Transactional
-@RequiredArgsConstructor
 public class MemberService {
+
     private final MemberRepository memberRepository;
-    private final ApplicationEventPublisher publisher;
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils authorityUtils;
+
+    public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder, CustomAuthorityUtils authorityUtils) {
+        this.memberRepository = memberRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.authorityUtils = authorityUtils;
+    }
 
     public Member createMember(Member member) {
         verifyExistsEmail(member.getEmail());
@@ -41,7 +43,6 @@ public class MemberService {
 
         Member savedMember = memberRepository.save(member);
 
-        publisher.publishEvent(new MemberRegistrationApplicationEvent(this, savedMember));
         return savedMember;
     }
 
